@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Solicitação de Apoio</title>
+  <style>
+    :root {
+      --azul-escuro: #001e4c;
+      --branco: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--azul-escuro);
+      color: var(--branco);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding-top: 150px; /* espaço para logo grande */
+      position: relative;
+    }
+
+    .logo-grande {
+      position: absolute;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 200px;
+    }
+
+    .logo-pequena {
+      position: fixed;
+      bottom: 10px;
+      right: 10px;
+      width: 60px;
+      opacity: 0.9;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 500px;
+      background-color: var(--branco);
+      color: #000;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    form label {
+      font-size: 16px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    form input,
+    form select,
+    form textarea {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    textarea {
+      height: 100px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background-color: var(--azul-escuro);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background-color: #003377;
+    }
+
+    #mensagens-rapidas {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+    }
+
+    #mensagens-rapidas button {
+      background-color: #0056b3;
+      margin: 5px 0;
+    }
+
+    #mensagens-rapidas button:hover {
+      background-color: #003377;
+    }
+
+    #status {
+      font-weight: bold;
+      margin-bottom: 15px;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Logo grande centralizada no topo -->
+  <img src="Logo_grande2.png" alt="Logo Grande" class="logo-grande" />
+
+  <div class="container">
+    <h1>Solicitação de Apoio</h1>
+    <form id="form">
+      <label for="tipo-apoio">Que tipo de apoio você precisa?</label>
+      <select id="tipo-apoio" required>
+        <option value="médico">Médico</option>
+        <option value="psicológico">Psicológico</option>
+        <option value="educacional">Educacional</option>
+        <option value="segurança">Segurança</option>
+        <option value="informações">Informações</option>
+      </select>
+
+      <label for="andar">Qual andar você está?</label>
+      <input type="text" id="andar" placeholder="Ex: 2º Andar" required />
+
+      <label for="sala">Qual sala você está?</label>
+      <input type="text" id="sala" placeholder="Ex: Sala 203" required />
+
+      <label for="mensagem">Digite sua mensagem:</label>
+      <textarea id="mensagem" placeholder="Explique sua situação..."></textarea>
+
+      <label for="deficiencia">Você possui deficiência física?</label>
+      <select id="deficiencia">
+        <option value="não">Não</option>
+        <option value="sim">Sim</option>
+      </select>
+
+      <div id="opcoes-deficiencia" style="display: none;">
+        <label for="deficiencia-tipo">Qual tipo de deficiência?</label>
+        <select id="deficiencia-tipo">
+          <option value="visual">Visual</option>
+          <option value="motora">Motora</option>
+          <option value="auditiva">Auditiva</option>
+          <option value="outra">Outra</option>
+        </select>
+      </div>
+
+      <div id="status"></div>
+
+      <button type="button" onclick="enviarParaWhatsApp()">Enviar Solicitação</button>
+    </form>
+
+    <div id="mensagens-rapidas">
+      <button onclick="adicionarMensagem('Estou com crise de ansiedade, preciso de ajuda rápida!')">Crise de Ansiedade</button>
+      <button onclick="adicionarMensagem('Estou tendo dificuldades para respirar, preciso de ajuda médica!')">Dificuldade Respiratória</button>
+      <button onclick="adicionarMensagem('Estou perdido, preciso de informações sobre como sair daqui.')">Informações</button>
+      <button onclick="adicionarMensagem('Preciso de segurança, alguém está me ameaçando!')">Segurança</button>
+    </div>
+  </div>
+
+  <!-- Logo pequena no canto inferior direito -->
+  <img src="Logo_pequena.png" alt="Logo Pequena" class="logo-pequena" />
+
+  <script>
+    function enviarParaWhatsApp() {
+      const tipoApoio = document.getElementById("tipo-apoio").value;
+      const andar = document.getElementById("andar").value;
+      const sala = document.getElementById("sala").value;
+      const mensagem = document.getElementById("mensagem").value.trim();
+      const deficiencia = document.getElementById("deficiencia").value;
+      const deficienciaTipo = document.getElementById("deficiencia-tipo").value;
+
+      let texto = `*Tipo de Apoio:* ${tipoApoio}\n*Andar:* ${andar}\n*Sala:* ${sala}\n*Mensagem:* ${mensagem}`;
+      if (deficiencia === 'sim') {
+        texto += `\n*Deficiência Física:* ${deficienciaTipo}`;
+      }
+
+      const foneDestino = "551970216215";
+      const link = `https://wa.me/${foneDestino}?text=${encodeURIComponent(texto)}`;
+      window.open(link, "_blank");
+
+      document.getElementById("status").innerHTML = "Sua solicitação foi enviada com sucesso!";
+    }
+
+    document.getElementById("deficiencia").addEventListener("change", function () {
+      const opcoes = document.getElementById("opcoes-deficiencia");
+      opcoes.style.display = this.value === "sim" ? "block" : "none";
+    });
+
+    function adicionarMensagem(texto) {
+      document.getElementById("mensagem").value = texto;
+    }
+  </script>
+</body>
+</html>
